@@ -8,7 +8,7 @@ import model
 import train
 import sys
 import csv
-from util import sst, mr, load_word_vectors
+from util import sst, sst2, mr, load_word_vectors
 from collections import OrderedDict
 import numpy as np
 
@@ -30,6 +30,8 @@ def load_data(args):
        return mr(**split_args)
     elif args.dataset == 'sst':
        return sst(fine_grained=args.fine_grained, train_subtrees=args.train_subtrees, **split_args)
+    elif args.dataset == 'sst2':
+        return sst2(**split_args)
 
 
 def main():
@@ -57,7 +59,7 @@ def main():
     parser.add_argument('-predict', type=str, default=None, help='predict the sentence given')
     parser.add_argument('-predictfile', type=str, default=None, help='predict sentences in a file')
     parser.add_argument('-test', action='store_true', default=False, help='train or test')
-    parser.add_argument('-dataset', type=str, default='sst', help='specify dataset: sst | mr | none')
+    parser.add_argument('-dataset', type=str, default='sst', help='specify dataset: sst | sst2 | mr | none')
     parser.add_argument('-fine-grained', action='store_true', default=False, help='use 5-class sst')
     parser.add_argument('-train-subtrees', action='store_true', default=False, help='train sst subtrees')
     parser.add_argument('-load-word-vectors', type=str, default=None, help='load pre-trained word vectors in binary format')
