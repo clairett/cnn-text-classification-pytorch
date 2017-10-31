@@ -36,11 +36,32 @@ def get_train_dev_test(callable, batch_size=32, **kargs):
 
     return text_field, label_field, train_iter, dev_iter, test_iter
 
+
+def get_train_dev_test_from_tsv(batch_size=32, **kargs):
+    text_field, label_field = get_fields()
+
+    train_data, dev_data, test_data = data.TabularDataset.splits(path='./data/SST2/', train='train.tsv',
+                                                  validation='dev.tsv', test='qualtrics.tsv', format='tsv',
+                                                  fields=[('text', text_field), ('label', label_field)])
+    text_field.build_vocab(train_data, dev_data, test_data)
+    label_field.build_vocab(train_data, dev_data, test_data)
+    train_iter, dev_iter, test_iter = data.BucketIterator.splits(
+                                        (train_data, dev_data, test_data),
+                                        batch_sizes=(batch_size, len(dev_data), len(test_data)), sort_key=lambda x: len(x.text),
+                                        **kargs)
+
+    return text_field, label_field, train_iter, dev_iter, test_iter
+
+
 # load MR dataset
 def mr(shuffle=False, **kargs):
    return get_train_dev(
          lambda text_field, label_field, **ka: mydatasets.MR.splits(text_field, label_field, shuffle=shuffle),
          **kargs)
+
+# load SST2 dataset
+def sst2(**kargs):
+    return get_train_dev_test_from_tsv(**kargs)
 
 # load SST dataset
 def sst(fine_grained=False, train_subtrees=False, **kargs):
