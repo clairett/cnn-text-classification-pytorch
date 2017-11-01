@@ -141,7 +141,7 @@ def main():
 
     elif args.test:
         if test_iter:
-            train.eval(test_iter, cnn, args)
+            train.eval(test_iter, cnn, args, print_info=True)
         else:
             print("\nThe test dataset does not exist.\n")
     else:
