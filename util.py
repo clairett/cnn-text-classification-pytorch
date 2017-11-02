@@ -23,7 +23,7 @@ def get_train_dev(callable, batch_size=32, **kargs):
 
     return text_field, label_field, train_iter, dev_iter, None
 
-def get_train_dev_test(callable, batch_size=32, **kargs):
+def get_train_dev_test(callable, batch_size=50, **kargs):
     text_field, label_field = get_fields()
 
     train_data, dev_data, test_data = callable(text_field, label_field, **kargs)
@@ -37,7 +37,7 @@ def get_train_dev_test(callable, batch_size=32, **kargs):
     return text_field, label_field, train_iter, dev_iter, test_iter
 
 
-def get_train_dev_test_from_tsv(batch_size=32, **kargs):
+def get_train_dev_test_from_tsv(batch_size=50, **kargs):
     text_field, label_field = get_fields()
 
     train_data, dev_data, test_data = data.TabularDataset.splits(path='./data/SST2/', train='train.tsv',
@@ -69,7 +69,7 @@ def sst(fine_grained=False, train_subtrees=False, **kargs):
           lambda text_field, label_field, **ka: datasets.SST.splits(text_field, label_field, fine_grained=fine_grained, train_subtrees=train_subtrees),
           **kargs)
 
-def get_unk_vector(dim, range=0.01):
+def get_unk_vector(dim, range=0.25):
    return np.random.uniform(-range, range, dim).astype("float32")
 
 def load_word_vectors(filepath, binary, vocab):
